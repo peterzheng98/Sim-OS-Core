@@ -18,8 +18,10 @@ int main(void) {
   char *command = (char *)malloc(sizeof(char) * MAX_LINE);
   int first_run = 1;
   int should_run = 1;
+  int background_run = 0;
 
   while (should_run != 0) {
+    background_run = 0;
     printf("osh>");
     fflush(stdout);
     size_t buf = 0;
@@ -46,9 +48,11 @@ int main(void) {
         argc++;
       }
     }
-    args[argc] = (char *)malloc(cmd_line_size);
-    strcpy(args[argc], tmp);
-    argc++;
+    if(strcmp(tmp, "&") != 0) {
+      args[argc] = (char *)malloc(cmd_line_size);
+      strcpy(args[argc], tmp);
+      argc++;
+    } else background_run = 1;
     size_t idx = argc;
     for(; idx < MAX_LINE / 2 + 1; ++idx) args[idx] = NULL;
     free(tmp);
@@ -61,6 +65,10 @@ int main(void) {
       printf("Exit.");
       exit(0);
     }
+    if(argc == 1 && strcmp(args[0], "clear") == 0){
+      printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+      continue;
+    }
     pid_t child_pid = fork();
     if(child_pid == 0){
       execvp(args[0], args);
@@ -68,7 +76,10 @@ int main(void) {
       exit(0);
     } else {
       pid_t tpid = 0;
-      while(tpid != child_pid) tpid = wait(&child_status);
+      if(background_run != 1)
+        while(tpid != child_pid) tpid = wait(&child_status);
+      else
+        printf("[1] + %d %s Running\n", child_pid, args[0]);
       fflush(stderr);
 
       if(child_status != 0)
