@@ -3,4 +3,5 @@ project(Sim_OS_Core C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(Sim_OS_Core main.c)
+add_executable(Sim_OS_Core main.c libfunc.h)
+add_executable(UnitTest unit.c libfunc.h)

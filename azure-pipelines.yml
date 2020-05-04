@@ -1,0 +1,16 @@
+trigger:
+  - master
+
+stages:
+  - stage: Test
+    jobs:
+      - job: "linux"
+        pool:
+          vmImage: "ubuntu-18.04"
+        steps:
+          - script: sudo apt update && sudo apt install build-essential
+            displayName: Install dependency
+          - script: gcc -o UnitTest unit.c -O2
+            displayName: Build Lab01-Shell Function Test
+          - script: ./UnitTest
+              displayName: Lab01-Shell Function Test

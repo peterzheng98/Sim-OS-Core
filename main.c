@@ -10,12 +10,15 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "libfunc.h"
+
 #define MAX_LINE 80 /* 80 chars per line, per command */
 
 int main(void) {
   char *args[MAX_LINE / 2 + 1];
   /* command line (of 80) has max of 40 arguments */
   char *command = (char *)malloc(sizeof(char) * MAX_LINE);
+  char *last_command = (char *)malloc(sizeof(char) * MAX_LINE);
   int first_run = 1;
   int should_run = 1;
   int background_run = 0;
@@ -30,6 +33,18 @@ int main(void) {
     if(cmd_line_size == 1){
       printf("You didn't input any command. Please retry.\n"); // Only input '\n' means no real command.
       continue;
+    }
+    // for history use
+    if(check_dual_exclamation(command)){
+      if(first_run){
+        printf("No commands in history!\n");
+        continue;
+      } else {
+        modify_dual_exclamation(command, last_command, MAX_LINE);
+      }
+    } else {
+      first_run = 0;
+      strcpy(last_command, command);
     }
 //    debug:
 //    printf("Input: [%s]\n", command);
