@@ -13,4 +13,4 @@ stages:
           - script: gcc -o UnitTest unit.c -O2
             displayName: Build Lab01-Shell Function Test
           - script: ./UnitTest
-              displayName: Lab01-Shell Function Test
+            displayName: Lab01-Shell Function Test
