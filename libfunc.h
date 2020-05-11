@@ -53,4 +53,24 @@ void modify_dual_exclamation(char *current_cmd, char *last_cmd, int limit) {
   strcpy(current_cmd, temp);
 }
 
+void search_redirect(char **current_cmd_args, char *in_redirect, char *out_redirect, size_t argc){
+  if(argc <= 2) return;
+  if(strcmp(current_cmd_args[argc - 2], ">") == 0) {
+    out_redirect = (char*) malloc(sizeof(char) * (strlen(current_cmd_args[argc - 1]) + 1));
+    strcpy(out_redirect, current_cmd_args[argc - 1]);
+    free(current_cmd_args[argc - 1]);
+    free(current_cmd_args[argc - 2]);
+    current_cmd_args[argc - 1] = current_cmd_args[argc - 2] = NULL;
+    return;
+  }
+  if(strcmp(current_cmd_args[argc - 2], "<") == 0) {
+    in_redirect = (char*) malloc(sizeof(char) * (strlen(current_cmd_args[argc - 1]) + 1));
+    strcpy(in_redirect, current_cmd_args[argc - 1]);
+    free(current_cmd_args[argc - 1]);
+    free(current_cmd_args[argc - 2]);
+    current_cmd_args[argc - 1] = current_cmd_args[argc - 2] = NULL;
+    return;
+  }
+}
+
 #endif // SIM_OS_CORE_LIBFUNC_H
